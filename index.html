@@ -122,12 +122,12 @@
 
         .stimulus {
             font-family: 'Courier New', monospace;
-            font-size: 3em;
+            font-size: 2.5em;
             font-weight: bold;
-            letter-spacing: 10px;
-            line-height: 1.4;
+            line-height: 1.2;
             color: #4db8ff;
             white-space: pre;
+            letter-spacing: 0.1em;
         }
 
         .response-keys {
@@ -309,24 +309,120 @@
     </div>
 
     <script>
-        // Navon stimuli definitions - global letter made of local letters
+        // Navon stimuli definitions - properly aligned ASCII art
         const stimuli = {
-            'Lu': { global: 'L', local: 'u', correct: 'B', level: 'global', display: 'L\nL\nL\nu u u' },
-            'Uo': { global: 'U', local: 'o', correct: 'B', level: 'global', display: 'o   o\no   o\no o o' },
-            'Uu': { global: 'U', local: 'u', correct: 'N', level: 'none', display: 'u   u\nu   u\nu u u' },
-            'Ul': { global: 'U', local: 'l', correct: 'N', level: 'none', display: 'l   l\nl   l\nl l l' },
-            'Ll': { global: 'L', local: 'l', correct: 'N', level: 'none', display: 'l\nl\nl\nl l l' },
-            'Lo': { global: 'L', local: 'o', correct: 'B', level: 'local', display: 'o\no\no\no o o' },
-            'Ou': { global: 'O', local: 'u', correct: 'B', level: 'global', display: 'u u u\nu   u\nu   u\nu u u' },
-            'Ol': { global: 'O', local: 'l', correct: 'B', level: 'global', display: 'l l l\nl   l\nl   l\nl l l' },
-            'Tt': { global: 'T', local: 't', correct: 'N', level: 'none', display: 't t t\n  t\n  t\n  t' },
-            'Ts': { global: 'T', local: 's', correct: 'N', level: 'none', display: 's s s\n  s\n  s\n  s' },
-            'Th': { global: 'T', local: 'h', correct: 'B', level: 'local', display: 'h h h\n  h\n  h\n  h' },
-            'St': { global: 'S', local: 't', correct: 'N', level: 'none', display: 't t\nt\nt t t\n    t\nt t' },
-            'Ss': { global: 'S', local: 's', correct: 'N', level: 'none', display: 's s\ns\ns s s\n    s\ns s' },
-            'Sh': { global: 'S', local: 'h', correct: 'B', level: 'local', display: 'h h\nh\nh h h\n    h\nh h' },
-            'Ht': { global: 'H', local: 't', correct: 'B', level: 'global', display: 't   t\nt   t\nt t t t\nt   t\nt   t' },
-            'Hs': { global: 'H', local: 's', correct: 'B', level: 'global', display: 's   s\ns   s\ns s s s\ns   s\ns   s' }
+            'Lu': {
+                global: 'L',
+                local: 'u',
+                correct: 'B',
+                level: 'global',
+                display: 'L L L\nL\nL\nL\nL L L'
+            },
+            'Uo': {
+                global: 'U',
+                local: 'o',
+                correct: 'B',
+                level: 'global',
+                display: 'o   o\no   o\no   o\no   o\no o o'
+            },
+            'Uu': {
+                global: 'U',
+                local: 'u',
+                correct: 'N',
+                level: 'none',
+                display: 'u   u\nu   u\nu   u\nu   u\nu u u'
+            },
+            'Ul': {
+                global: 'U',
+                local: 'l',
+                correct: 'N',
+                level: 'none',
+                display: 'l   l\nl   l\nl   l\nl   l\nl l l'
+            },
+            'Ll': {
+                global: 'L',
+                local: 'l',
+                correct: 'N',
+                level: 'none',
+                display: 'l l l\nl\nl\nl\nl l l'
+            },
+            'Lo': {
+                global: 'L',
+                local: 'o',
+                correct: 'B',
+                level: 'local',
+                display: 'o o o\no\no\no\no o o'
+            },
+            'Ou': {
+                global: 'O',
+                local: 'u',
+                correct: 'B',
+                level: 'global',
+                display: 'u u u\nu   u\nu   u\nu   u\nu u u'
+            },
+            'Ol': {
+                global: 'O',
+                local: 'l',
+                correct: 'B',
+                level: 'global',
+                display: 'l l l\nl   l\nl   l\nl   l\nl l l'
+            },
+            'Tt': {
+                global: 'T',
+                local: 't',
+                correct: 'N',
+                level: 'none',
+                display: 't t t\n  t\n  t\n  t\n  t'
+            },
+            'Ts': {
+                global: 'T',
+                local: 's',
+                correct: 'N',
+                level: 'none',
+                display: 's s s\n  s\n  s\n  s\n  s'
+            },
+            'Th': {
+                global: 'T',
+                local: 'h',
+                correct: 'B',
+                level: 'local',
+                display: 'h h h\n  h\n  h\n  h\n  h'
+            },
+            'St': {
+                global: 'S',
+                local: 't',
+                correct: 'N',
+                level: 'none',
+                display: 't t\nt\nt t t\n    t\nt t'
+            },
+            'Ss': {
+                global: 'S',
+                local: 's',
+                correct: 'N',
+                level: 'none',
+                display: 's s\ns\ns s s\n    s\ns s'
+            },
+            'Sh': {
+                global: 'S',
+                local: 'h',
+                correct: 'B',
+                level: 'local',
+                display: 'h h\nh\nh h h\n    h\nh h'
+            },
+            'Ht': {
+                global: 'H',
+                local: 't',
+                correct: 'B',
+                level: 'global',
+                display: 't   t\nt   t\nt t t t\nt   t\nt   t'
+            },
+            'Hs': {
+                global: 'H',
+                local: 's',
+                correct: 'B',
+                level: 'global',
+                display: 's   s\ns   s\ns s s s\ns   s\ns   s'
+            }
         };
 
         // Experiment state
@@ -398,17 +494,15 @@
             document.getElementById('trialNumber').textContent = `Trial: ${experimentData.currentTrial}/50`;
             document.getElementById('stimulus').textContent = stimulus.display;
 
-            // Set up keyboard listener
             if (currentTimer) clearTimeout(currentTimer);
             
+            trialStartTime = Date.now();
             document.onkeydown = (e) => handleResponse(e, stimulusKey);
             
-            const startTime = Date.now();
             let timeRemaining = 4000;
 
-            // Update timer display
             const timerInterval = setInterval(() => {
-                timeRemaining = 4000 - (Date.now() - startTime);
+                timeRemaining = 4000 - (Date.now() - trialStartTime);
                 if (timeRemaining > 0) {
                     document.getElementById('responseTimer').textContent = `Time: ${Math.ceil(timeRemaining / 100) / 10}s`;
                 } else {
@@ -458,48 +552,6 @@
         }
 
         let trialStartTime = 0;
-
-        function presentTrial() {
-            experimentData.currentTrial++;
-            
-            if (experimentData.currentTrial > 50) {
-                showCompletionScreen();
-                return;
-            }
-
-            responseGiven = false;
-            const stimulusKey = fullTrialSequence[experimentData.currentTrial - 1];
-            const stimulus = stimuli[stimulusKey];
-
-            document.getElementById('trialNumber').textContent = `Trial: ${experimentData.currentTrial}/50`;
-            document.getElementById('stimulus').textContent = stimulus.display;
-
-            if (currentTimer) clearTimeout(currentTimer);
-            
-            trialStartTime = Date.now();
-            document.onkeydown = (e) => handleResponse(e, stimulusKey);
-            
-            let timeRemaining = 4000;
-
-            const timerInterval = setInterval(() => {
-                timeRemaining = 4000 - (Date.now() - trialStartTime);
-                if (timeRemaining > 0) {
-                    document.getElementById('responseTimer').textContent = `Time: ${Math.ceil(timeRemaining / 100) / 10}s`;
-                } else {
-                    clearInterval(timerInterval);
-                    if (!responseGiven) {
-                        handleTimeout(stimulusKey, 4000);
-                    }
-                }
-            }, 100);
-
-            currentTimer = setTimeout(() => {
-                clearInterval(timerInterval);
-                if (!responseGiven) {
-                    handleTimeout(stimulusKey, 4000);
-                }
-            }, 4000);
-        }
 
         function recordTrial(stimulusKey, status, rt, level) {
             experimentData.trials.push({
