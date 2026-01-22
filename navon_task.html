@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navon Task Experiment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .welcome-screen, .experiment-screen, .feedback-screen, .completion-screen {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #4db8ff;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #4db8ff;
+        }
+
+        .input-group {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            font-size: 1em;
+            border: 2px solid #4db8ff;
+            border-radius: 5px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            width: 200px;
+            text-align: center;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            background-color: #0d3d66;
+            border-color: #66d9ff;
+        }
+
+        button {
+            background-color: #4db8ff;
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #66d9ff;
+        }
+
+        button:active {
+            background-color: #3399cc;
+        }
+
+        .instructions {
+            text-align: left;
+            margin: 20px 0;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .instructions p {
+            margin-bottom: 15px;
+        }
+
+        .stimulus-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            margin: 40px 0;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            border: 2px solid #4db8ff;
+        }
+
+        .stimulus {
+            font-family: 'Courier New', monospace;
+            font-size: 3em;
+            font-weight: bold;
+            letter-spacing: 10px;
+            line-height: 1.4;
+            color: #4db8ff;
+            white-space: pre;
+        }
+
+        .response-keys {
+            margin: 20px 0;
+            font-size: 1.2em;
+            color: #66d9ff;
+        }
+
+        .response-keys p {
+            margin: 10px 0;
+        }
+
+        .feedback-message {
+            font-size: 2em;
+            margin: 30px 0;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .correct {
+            color: #00ff00;
+            background-color: rgba(0, 255, 0, 0.1);
+        }
+
+        .wrong {
+            color: #ff4444;
+            background-color: rgba(255, 68, 68, 0.1);
+        }
+
+        .tooslow {
+            color: #ffaa00;
+            background-color: rgba(255, 170, 0, 0.1);
+        }
+
+        .feedback-section {
+            text-align: left;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+            border-left: 4px solid #4db8ff;
+        }
+
+        .feedback-section h3 {
+            color: #66d9ff;
+            margin-bottom: 10px;
+        }
+
+        .feedback-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px 0;
+        }
+
+        .feedback-label {
+            font-weight: bold;
+            color: #4db8ff;
+        }
+
+        .feedback-value {
+            color: #ffffff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .timer {
+            font-size: 1.3em;
+            color: #ffaa00;
+            margin: 20px 0;
+        }
+
+        .completion-message {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin: 30px 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .summary-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        .summary-table th, .summary-table td {
+            border: 1px solid #4db8ff;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .summary-table th {
+            background-color: #0d3d66;
+            color: #66d9ff;
+        }
+
+        .summary-table tr:nth-child(even) {
+            background-color: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="welcome-screen">
+            <h1>Navon Task Experiment</h1>
+            <div class="instructions">
+                <p>Welcome to the Navon Task experiment.</p>
+                <p>In this task, you will be shown letters composed of smaller letters. Your task is to identify either the large (global) letter or the small (local) letters as instructed in each trial.</p>
+            </div>
+            <div class="input-group">
+                <label for="participantID">Enter Participant ID (3 digits):</label>
+                <input type="text" id="participantID" placeholder="e.g., 001" maxlength="3" pattern="[0-9]{3}">
+            </div>
+            <button onclick="startExperiment()">Start Experiment</button>
+        </div>
+
+        <!-- Experiment Screen -->
+        <div id="experimentScreen" class="experiment-screen hidden">
+            <h2>Navon Task</h2>
+            <div class="timer">
+                <span id="trialNumber">Trial: 1/50</span>
+            </div>
+            <div id="instructions"></div>
+            <div class="stimulus-container">
+                <div id="stimulus" class="stimulus"></div>
+            </div>
+            <div class="response-keys">
+                <p>Press <strong>B</strong> for left letter or <strong>N</strong> for right letter</p>
+                <p id="responseTimer" style="color: #ffaa00;"></p>
+            </div>
+        </div>
+
+        <!-- Feedback Screen -->
+        <div id="feedbackScreen" class="feedback-screen hidden">
+            <h2>Trial Feedback</h2>
+            <div id="feedbackMessage" class="feedback-message"></div>
+            <p style="margin: 20px 0; font-size: 1.1em;">Reaction Time: <span id="reactionTime">0</span> ms</p>
+            <p style="font-size: 1.05em; color: #66d9ff;">Press SPACE to continue to next trial</p>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="completionScreen" class="completion-screen hidden">
+            <h2>Experiment Complete!</h2>
+            <div class="completion-message">
+                <p>Thank you for completing the Navon Task experiment.</p>
+                <p>Your results have been recorded with Participant ID: <strong id="completionParticipantID"></strong></p>
+            </div>
+            
+            <h3 style="color: #4db8ff; margin-top: 30px;">Performance Summary</h3>
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Condition</th>
+                        <th>Reaction Time (ms)</th>
+                        <th>Error Count</th>
+                        <th>Accuracy (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="summaryBody">
+                </tbody>
+            </table>
+
+            <div class="button-group">
+                <button onclick="downloadCSV()">Download Results as CSV</button>
+                <button onclick="location.reload()">Start New Session</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navon stimuli definitions - global letter made of local letters
+        const stimuli = {
+            'Lu': { global: 'L', local: 'u', correct: 'B', level: 'global', display: 'L\nL\nL\nu u u' },
+            'Uo': { global: 'U', local: 'o', correct: 'B', level: 'global', display: 'o   o\no   o\no o o' },
+            'Uu': { global: 'U', local: 'u', correct: 'N', level: 'none', display: 'u   u\nu   u\nu u u' },
+            'Ul': { global: 'U', local: 'l', correct: 'N', level: 'none', display: 'l   l\nl   l\nl l l' },
+            'Ll': { global: 'L', local: 'l', correct: 'N', level: 'none', display: 'l\nl\nl\nl l l' },
+            'Lo': { global: 'L', local: 'o', correct: 'B', level: 'local', display: 'o\no\no\no o o' },
+            'Ou': { global: 'O', local: 'u', correct: 'B', level: 'global', display: 'u u u\nu   u\nu   u\nu u u' },
+            'Ol': { global: 'O', local: 'l', correct: 'B', level: 'global', display: 'l l l\nl   l\nl   l\nl l l' },
+            'Tt': { global: 'T', local: 't', correct: 'N', level: 'none', display: 't t t\n  t\n  t\n  t' },
+            'Ts': { global: 'T', local: 's', correct: 'N', level: 'none', display: 's s s\n  s\n  s\n  s' },
+            'Th': { global: 'T', local: 'h', correct: 'B', level: 'local', display: 'h h h\n  h\n  h\n  h' },
+            'St': { global: 'S', local: 't', correct: 'N', level: 'none', display: 't t\nt\nt t t\n    t\nt t' },
+            'Ss': { global: 'S', local: 's', correct: 'N', level: 'none', display: 's s\ns\ns s s\n    s\ns s' },
+            'Sh': { global: 'S', local: 'h', correct: 'B', level: 'local', display: 'h h\nh\nh h h\n    h\nh h' },
+            'Ht': { global: 'H', local: 't', correct: 'B', level: 'global', display: 't   t\nt   t\nt t t t\nt   t\nt   t' },
+            'Hs': { global: 'H', local: 's', correct: 'B', level: 'global', display: 's   s\ns   s\ns s s s\ns   s\ns   s' }
+        };
+
+        // Experiment state
+        let experimentData = {
+            participantID: '',
+            trials: [],
+            currentTrial: 0,
+            responses: []
+        };
+
+        // Trial sequence - using "all_before_repeat" logic (50 trials total)
+        const trialSequence = [
+            'Lu', 'Uo', 'Uu', 'Ul', 'Ll', 'Lo', 'Ou', 'Ol', 'Tt', 'Ts',
+            'Th', 'St', 'Ss', 'Sh', 'Ht', 'Hs'
+        ];
+
+        let fullTrialSequence = [];
+        let currentTimer = null;
+        let responseGiven = false;
+
+        function startExperiment() {
+            const pidInput = document.getElementById('participantID');
+            const pid = pidInput.value.trim();
+
+            if (!/^\d{3}$/.test(pid)) {
+                alert('Please enter a valid 3-digit participant ID');
+                return;
+            }
+
+            experimentData.participantID = pid;
+            
+            // Generate trial sequence: 50 trials with "all_before_repeat" logic
+            fullTrialSequence = [];
+            const fullRounds = Math.floor(50 / trialSequence.length); // 3 full rounds
+            const remainder = 50 % trialSequence.length; // 2 remaining
+
+            for (let i = 0; i < fullRounds; i++) {
+                fullTrialSequence.push(...shuffleArray([...trialSequence]));
+            }
+            fullTrialSequence.push(...shuffleArray(trialSequence.slice(0, remainder)));
+
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('experimentScreen').classList.remove('hidden');
+            
+            presentTrial();
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function presentTrial() {
+            experimentData.currentTrial++;
+            
+            if (experimentData.currentTrial > 50) {
+                showCompletionScreen();
+                return;
+            }
+
+            responseGiven = false;
+            const stimulusKey = fullTrialSequence[experimentData.currentTrial - 1];
+            const stimulus = stimuli[stimulusKey];
+
+            document.getElementById('trialNumber').textContent = `Trial: ${experimentData.currentTrial}/50`;
+            document.getElementById('stimulus').textContent = stimulus.display;
+
+            // Set up keyboard listener
+            if (currentTimer) clearTimeout(currentTimer);
+            
+            document.onkeydown = (e) => handleResponse(e, stimulusKey);
+            
+            const startTime = Date.now();
+            let timeRemaining = 4000;
+
+            // Update timer display
+            const timerInterval = setInterval(() => {
+                timeRemaining = 4000 - (Date.now() - startTime);
+                if (timeRemaining > 0) {
+                    document.getElementById('responseTimer').textContent = `Time: ${Math.ceil(timeRemaining / 100) / 10}s`;
+                } else {
+                    clearInterval(timerInterval);
+                    if (!responseGiven) {
+                        handleTimeout(stimulusKey, 4000);
+                    }
+                }
+            }, 100);
+
+            currentTimer = setTimeout(() => {
+                clearInterval(timerInterval);
+                if (!responseGiven) {
+                    handleTimeout(stimulusKey, 4000);
+                }
+            }, 4000);
+        }
+
+        function handleResponse(e, stimulusKey) {
+            if (responseGiven) return;
+
+            const key = e.key.toUpperCase();
+            if (key !== 'B' && key !== 'N') return;
+
+            responseGiven = true;
+            if (currentTimer) clearTimeout(currentTimer);
+            document.onkeydown = null;
+
+            const stimulus = stimuli[stimulusKey];
+            const isCorrect = (key === 'B' && stimulus.correct === 'B') || 
+                             (key === 'N' && stimulus.correct === 'N');
+
+            const rt = Date.now() - trialStartTime;
+            
+            recordTrial(stimulusKey, isCorrect ? 'CORRECT' : 'WRONG', rt, stimulus.level);
+            showFeedback(isCorrect ? 'CORRECT' : 'WRONG', rt);
+        }
+
+        function handleTimeout(stimulusKey, rt) {
+            responseGiven = true;
+            if (currentTimer) clearTimeout(currentTimer);
+            document.onkeydown = null;
+
+            const stimulus = stimuli[stimulusKey];
+            recordTrial(stimulusKey, 'TIMEOUT', rt, stimulus.level);
+            showFeedback('TIMEOUT', rt);
+        }
+
+        let trialStartTime = 0;
+
+        function presentTrial() {
+            experimentData.currentTrial++;
+            
+            if (experimentData.currentTrial > 50) {
+                showCompletionScreen();
+                return;
+            }
+
+            responseGiven = false;
+            const stimulusKey = fullTrialSequence[experimentData.currentTrial - 1];
+            const stimulus = stimuli[stimulusKey];
+
+            document.getElementById('trialNumber').textContent = `Trial: ${experimentData.currentTrial}/50`;
+            document.getElementById('stimulus').textContent = stimulus.display;
+
+            if (currentTimer) clearTimeout(currentTimer);
+            
+            trialStartTime = Date.now();
+            document.onkeydown = (e) => handleResponse(e, stimulusKey);
+            
+            let timeRemaining = 4000;
+
+            const timerInterval = setInterval(() => {
+                timeRemaining = 4000 - (Date.now() - trialStartTime);
+                if (timeRemaining > 0) {
+                    document.getElementById('responseTimer').textContent = `Time: ${Math.ceil(timeRemaining / 100) / 10}s`;
+                } else {
+                    clearInterval(timerInterval);
+                    if (!responseGiven) {
+                        handleTimeout(stimulusKey, 4000);
+                    }
+                }
+            }, 100);
+
+            currentTimer = setTimeout(() => {
+                clearInterval(timerInterval);
+                if (!responseGiven) {
+                    handleTimeout(stimulusKey, 4000);
+                }
+            }, 4000);
+        }
+
+        function recordTrial(stimulusKey, status, rt, level) {
+            experimentData.trials.push({
+                stimulusKey: stimulusKey,
+                trialNumber: experimentData.currentTrial,
+                status: status,
+                rt: rt,
+                level: level
+            });
+        }
+
+        function showFeedback(status, rt) {
+            document.getElementById('experimentScreen').classList.add('hidden');
+            document.getElementById('feedbackScreen').classList.remove('hidden');
+
+            let message = '';
+            let className = '';
+
+            if (status === 'CORRECT') {
+                message = 'Correct!';
+                className = 'correct';
+            } else if (status === 'WRONG') {
+                message = 'Wrong!';
+                className = 'wrong';
+            } else if (status === 'TIMEOUT') {
+                message = 'Too Slow!';
+                className = 'tooslow';
+            }
+
+            const feedbackDiv = document.getElementById('feedbackMessage');
+            feedbackDiv.textContent = message;
+            feedbackDiv.className = 'feedback-message ' + className;
+            document.getElementById('reactionTime').textContent = rt;
+
+            document.onkeydown = (e) => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    document.getElementById('feedbackScreen').classList.add('hidden');
+                    document.getElementById('experimentScreen').classList.remove('hidden');
+                    presentTrial();
+                }
+            };
+        }
+
+        function showCompletionScreen() {
+            document.getElementById('experimentScreen').classList.add('hidden');
+            document.getElementById('feedbackScreen').classList.add('hidden');
+            document.getElementById('completionScreen').classList.remove('hidden');
+            document.onkeydown = null;
+
+            document.getElementById('completionParticipantID').textContent = experimentData.participantID;
+
+            // Calculate summary statistics
+            const summary = calculateSummary();
+            displaySummary(summary);
+        }
+
+        function calculateSummary() {
+            const summary = {
+                global: { rt: [], errors: 0, total: 0 },
+                local: { rt: [], errors: 0, total: 0 },
+                none: { rt: [], errors: 0, total: 0 }
+            };
+
+            experimentData.trials.forEach(trial => {
+                const levelKey = trial.level;
+                if (summary[levelKey]) {
+                    summary[levelKey].total++;
+                    if (trial.status === 'CORRECT') {
+                        summary[levelKey].rt.push(trial.rt);
+                    } else {
+                        summary[levelKey].errors++;
+                    }
+                }
+            });
+
+            // Calculate means
+            Object.keys(summary).forEach(key => {
+                if (summary[key].rt.length > 0) {
+                    summary[key].meanRT = Math.round(summary[key].rt.reduce((a, b) => a + b) / summary[key].rt.length);
+                } else {
+                    summary[key].meanRT = 0;
+                }
+                summary[key].accuracy = Math.round(((summary[key].total - summary[key].errors) / summary[key].total) * 100);
+            });
+
+            return summary;
+        }
+
+        function displaySummary(summary) {
+            const tbody = document.getElementById('summaryBody');
+            tbody.innerHTML = '';
+
+            const conditions = [
+                { key: 'global', label: 'Global Level (H or O)' },
+                { key: 'local', label: 'Local Level (h or o)' },
+                { key: 'none', label: 'No Target' }
+            ];
+
+            conditions.forEach(cond => {
+                const s = summary[cond.key];
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${cond.label}</td>
+                    <td>${s.meanRT}</td>
+                    <td>${s.errors}</td>
+                    <td>${s.accuracy}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function downloadCSV() {
+            let csv = 'Participant ID,Trial Number,Stimulus,Level,Status,Reaction Time (ms)\n';
+            
+            experimentData.trials.forEach(trial => {
+                csv += `${experimentData.participantID},${trial.trialNumber},${trial.stimulusKey},${trial.level},${trial.status},${trial.rt}\n`;
+            });
+
+            // Add summary statistics
+            csv += '\n\n';
+            csv += 'Summary Statistics\n';
+            const summary = calculateSummary();
+            
+            csv += 'Condition,Reaction Time (ms),Error Count,Accuracy (%)\n';
+            csv += `Global Level,${summary.global.meanRT},${summary.global.errors},${summary.global.accuracy}\n`;
+            csv += `Local Level,${summary.local.meanRT},${summary.local.errors},${summary.local.accuracy}\n`;
+            csv += `No Target,${summary.none.meanRT},${summary.none.errors},${summary.none.accuracy}\n`;
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `navon_task_p${experimentData.participantID}_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
